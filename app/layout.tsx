@@ -22,19 +22,19 @@ export async function generateMetadata(): Promise<Metadata> {
       template: "%s · Дорожный кодекс",
     },
     description:
-      "Интерактивный тренажёр российских дорожных знаков с тестами, справочником и личной статистикой.",
+      "Подготовка к экзамену ПДД: теория, дорожные знаки, работа над ошибками, практический чек-лист и личная статистика.",
     openGraph: {
       title: "Дорожный кодекс",
-      description: "Знаки, которые остаются в памяти.",
+      description: "Теория, знаки и практика — в одном тренажёре.",
       type: "website",
       locale: "ru_RU",
-      images: [{ url: `${origin}/og.png`, width: 1200, height: 630 }],
+      images: [{ url: `${origin}/og-v2.png`, width: 1728, height: 919 }],
     },
     twitter: {
       card: "summary_large_image",
       title: "Дорожный кодекс",
-      description: "Знаки, которые остаются в памяти.",
-      images: [`${origin}/og.png`],
+      description: "Теория, знаки и практика — в одном тренажёре.",
+      images: [`${origin}/og-v2.png`],
     },
   };
 }

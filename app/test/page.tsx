@@ -3,9 +3,9 @@ import { SiteHeader } from "../components/SiteHeader";
 import { TestRunner } from "../components/TestRunner";
 
 export const metadata: Metadata = {
-  title: "Тест по дорожным знакам",
+  title: "Тренировки и пробный экзамен ПДД",
   description:
-    "Проверьте знание дорожных знаков: 10 вопросов с близкими по смыслу вариантами ответа.",
+    "Пробный экзамен с таймером, тематические тренировки, дорожные знаки и работа над ошибками.",
 };
 
 export default function TestPage() {

@@ -3,9 +3,9 @@ import { SiteHeader } from "../components/SiteHeader";
 import { StatsDashboard } from "../components/StatsDashboard";
 
 export const metadata: Metadata = {
-  title: "Личная статистика",
+  title: "Готовность к экзамену и личная статистика",
   description:
-    "Статистика выполненных тестов, правильных ответов и общей точности.",
+    "Точность ответов по темам, история тренировок, слабые места и оценка готовности к экзамену ПДД.",
 };
 
 export default function StatsPage() {

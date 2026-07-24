@@ -5,11 +5,11 @@ import { SpotlightLink } from "./components/Spotlight";
 const paths = [
   {
     number: "01",
-    label: "Практика",
-    title: "Тест на знание знаков",
-    text: "10 вопросов, пять близких по смыслу вариантов и понятный разбор после каждого ответа.",
+    label: "Теория",
+    title: "Экзамен и тренировки",
+    text: "Пробный экзамен с таймером, короткая тренировка дня, темы и повторение ошибок.",
     href: "/test",
-    action: "Начать тест",
+    action: "Выбрать режим",
     external: true,
     tone: "lime",
   },
@@ -24,9 +24,18 @@ const paths = [
   },
   {
     number: "03",
+    label: "За рулём",
+    title: "Подготовка к практике",
+    text: "Чек-лист ключевых навыков, самодиагностика ошибок и план следующего занятия.",
+    href: "/practice",
+    action: "Открыть чек-лист",
+    tone: "red",
+  },
+  {
+    number: "04",
     label: "Прогресс",
-    title: "Личная статистика",
-    text: "Количество тестов, заданных вопросов, правильных ответов и динамика последних попыток.",
+    title: "Готовность к экзамену",
+    text: "Точность по темам, серия занятий, вопросы на повторение и понятная оценка готовности.",
     href: "/stats",
     action: "Смотреть результаты",
     tone: "blue",
@@ -45,21 +54,21 @@ export default function Home() {
             Интерактивный тренажёр ПДД
           </div>
           <h1>
-            Знаки, которые
-            <span> остаются в памяти.</span>
+            ПДД, которые
+            <span> работают за рулём.</span>
           </h1>
           <p className="hero-lead">
-            Спокойно изучайте дорожные знаки, проверяйте себя и следите за
-            прогрессом. Без перегруза теорией — только ясные объяснения и
-            практика.
+            Готовьтесь к теории и практике в одном месте: решайте экзамен,
+            разбирайте ошибки, повторяйте слабые темы и отмечайте навыки,
+            отработанные с инструктором.
           </p>
           <div className="hero-actions">
             <SpotlightLink href="/test" target="_blank" className="primary-cta">
-              Начать тест
+              Пробный экзамен
               <span aria-hidden="true">↗</span>
             </SpotlightLink>
-            <a className="text-link" href="/signs">
-              Сначала изучить знаки <span aria-hidden="true">→</span>
+            <a className="text-link" href="/practice">
+              Подготовиться к практике <span aria-hidden="true">→</span>
             </a>
           </div>
         </div>
@@ -87,7 +96,7 @@ export default function Home() {
         <div className="section-heading">
           <div>
             <div className="section-kicker">Выберите маршрут</div>
-            <h2>Три шага к уверенности</h2>
+            <h2>Четыре шага к уверенности</h2>
           </div>
           <p>
             Результаты тестов сохраняются на этом устройстве автоматически.
@@ -96,7 +105,7 @@ export default function Home() {
 
         <div className="path-grid">
           {paths.map((item) => (
-            <article className={`path-card path-${item.tone}`} key={item.href}>
+            <article className={`path-card path-${item.tone}`} key={item.number}>
               <div className="path-topline">
                 <span>{item.number}</span>
                 <span>{item.label}</span>

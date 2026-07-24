@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { quizTopics } from "../data/questions";
 import { clearStats, emptyStats, readStats, type Stats } from "../lib/stats";
 import { SpotlightButton, SpotlightLink } from "./Spotlight";
 
@@ -40,6 +41,35 @@ export function StatsDashboard() {
     [stats.attempts],
   );
 
+  const practicedTopics = quizTopics.filter(
+    (topic) => (stats.topicProgress[topic]?.questions ?? 0) > 0,
+  ).length;
+  const readiness = stats.totalQuestions
+    ? Math.min(
+        100,
+        Math.round(
+          percent * 0.7 +
+            (practicedTopics / quizTopics.length) * 20 +
+            Math.min(stats.completedTests / 5, 1) * 10,
+        ),
+      )
+    : 0;
+
+  const streak = useMemo(() => {
+    const days = new Set(
+      stats.attempts.map((attempt) => attempt.date.slice(0, 10)),
+    );
+    let count = 0;
+    const cursor = new Date();
+    const today = cursor.toISOString().slice(0, 10);
+    if (!days.has(today)) cursor.setDate(cursor.getDate() - 1);
+    while (days.has(cursor.toISOString().slice(0, 10))) {
+      count += 1;
+      cursor.setDate(cursor.getDate() - 1);
+    }
+    return count;
+  }, [stats.attempts]);
+
   const erase = () => {
     clearStats();
     setStats(emptyStats);
@@ -76,9 +106,9 @@ export function StatsDashboard() {
           </div>
           <p>
             {stats.totalQuestions
-              ? percent >= 80
-                ? "Вы уверенно распознаёте большинство знаков."
-                : "Ещё немного практики — и результат заметно вырастет."
+              ? readiness >= 85
+                ? "Хорошая форма: закрепите результат экзаменационной попыткой."
+                : "Продолжайте тренировки и закрывайте слабые темы."
               : "Пройдите первый тест, чтобы увидеть точность."}
           </p>
         </article>
@@ -111,6 +141,70 @@ export function StatsDashboard() {
         </div>
       </div>
 
+      <section className="readiness-section">
+        <article className="readiness-card">
+          <div>
+            <div className="section-kicker">Оценка готовности</div>
+            <h2>{readiness}%</h2>
+            <strong>
+              {readiness >= 85
+                ? "Можно пробовать экзамен"
+                : readiness >= 60
+                  ? "База уже есть"
+                  : "Продолжайте подготовку"}
+            </strong>
+            <p>
+              Оценка учитывает точность, количество изученных тем и регулярность
+              завершённых тренировок.
+            </p>
+          </div>
+          <div className="readiness-details">
+            <div>
+              <strong>{practicedTopics}/{quizTopics.length}</strong>
+              <span>тем затронуто</span>
+            </div>
+            <div>
+              <strong>{stats.wrongQuestionIds.length}</strong>
+              <span>вопросов повторить</span>
+            </div>
+            <div>
+              <strong>{streak}</strong>
+              <span>дней подряд</span>
+            </div>
+          </div>
+          <SpotlightLink href="/test" className="primary-cta">
+            Продолжить подготовку <span aria-hidden="true">→</span>
+          </SpotlightLink>
+        </article>
+
+        <div className="topic-progress-grid">
+          {quizTopics.map((topic, topicIndex) => {
+            const topicStats = stats.topicProgress[topic] ?? {
+              questions: 0,
+              correct: 0,
+            };
+            const topicPercent = topicStats.questions
+              ? Math.round((topicStats.correct / topicStats.questions) * 100)
+              : 0;
+            return (
+              <article key={topic}>
+                <span>{String(topicIndex + 1).padStart(2, "0")}</span>
+                <h3>{topic}</h3>
+                <strong>{topicStats.questions ? `${topicPercent}%` : "—"}</strong>
+                <div>
+                  <i style={{ width: `${topicPercent}%` }} />
+                </div>
+                <p>
+                  {topicStats.questions
+                    ? `${topicStats.correct} из ${topicStats.questions} верно`
+                    : "Тема ещё не изучалась"}
+                </p>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
       <section className="attempts-section">
         <div className="attempts-title">
           <div>
@@ -141,7 +235,7 @@ export function StatsDashboard() {
                     {String(attemptIndex + 1).padStart(2, "0")}
                   </span>
                   <div>
-                    <strong>Тест по дорожным знакам</strong>
+                    <strong>{attempt.title ?? "Тест по дорожным знакам"}</strong>
                     <span>{formatter.format(new Date(attempt.date))}</span>
                   </div>
                   <div className="attempt-score">
@@ -164,7 +258,7 @@ export function StatsDashboard() {
             </div>
             <div>
               <strong>Здесь появится история ваших тестов</strong>
-              <p>Ответьте на 10 вопросов — результат сохранится автоматически.</p>
+              <p>Завершите любую тренировку — результат сохранится автоматически.</p>
             </div>
             <SpotlightLink href="/test" target="_blank" className="secondary-cta">
               Пройти первый тест

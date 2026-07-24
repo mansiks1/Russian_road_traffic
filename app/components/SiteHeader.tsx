@@ -1,12 +1,13 @@
 export function SiteHeader({
   active,
 }: {
-  active: "home" | "test" | "signs" | "stats";
+  active: "home" | "test" | "signs" | "practice" | "stats";
 }) {
   const links = [
     { id: "home", href: "/", label: "Главная" },
-    { id: "test", href: "/test", label: "Тест" },
+    { id: "test", href: "/test", label: "Тренировки" },
     { id: "signs", href: "/signs", label: "Все знаки" },
+    { id: "practice", href: "/practice", label: "Практика" },
     { id: "stats", href: "/stats", label: "Статистика" },
   ] as const;
 
@@ -33,7 +34,7 @@ export function SiteHeader({
         ))}
       </nav>
       <a href="/test" className="header-test">
-        Проверить себя <span aria-hidden="true">↗</span>
+        Экзамен 20 минут <span aria-hidden="true">↗</span>
       </a>
     </header>
   );
