@@ -5,7 +5,11 @@ import { quizSigns, signImage, type RoadSign } from "../data/signs";
 import { recordAttempt } from "../lib/stats";
 import { SpotlightButton, SpotlightLink } from "./Spotlight";
 
-type Question = RoadSign & { choices: string[]; options: string[] };
+type Question = RoadSign & {
+  choices: string[];
+  options: string[];
+  correctAnswer: string;
+};
 
 function shuffle<T>(items: T[]) {
   const result = [...items];
@@ -19,7 +23,11 @@ function shuffle<T>(items: T[]) {
 function buildQuestions(): Question[] {
   return shuffle(quizSigns)
     .slice(0, 10)
-    .map((sign) => ({ ...sign, options: shuffle(sign.choices) }));
+    .map((sign) => ({
+      ...sign,
+      correctAnswer: sign.choices[0],
+      options: shuffle(sign.choices),
+    }));
 }
 
 export function TestRunner() {
@@ -58,7 +66,7 @@ export function TestRunner() {
   const choose = (answer: string) => {
     if (selected) return;
     setSelected(answer);
-    if (answer === question.name) setCorrect((value) => value + 1);
+    if (answer === question.correctAnswer) setCorrect((value) => value + 1);
   };
 
   const next = () => {
@@ -160,8 +168,10 @@ export function TestRunner() {
           <div className="answers-label">Выберите один вариант</div>
           <div className="answers-list">
             {question.options.map((answer, answerIndex) => {
-              const isCorrect = selected && answer === question.name;
-              const isWrong = selected === answer && answer !== question.name;
+              const isCorrect =
+                Boolean(selected) && answer === question.correctAnswer;
+              const isWrong =
+                selected === answer && answer !== question.correctAnswer;
               return (
                 <SpotlightButton
                   key={answer}
@@ -184,13 +194,15 @@ export function TestRunner() {
           {selected && (
             <div
               className={`answer-explanation ${
-                selected === question.name ? "success" : "error"
+                selected === question.correctAnswer ? "success" : "error"
               }`}
               aria-live="polite"
             >
               <div>
                 <strong>
-                  {selected === question.name ? "Верно!" : "Не совсем."}
+                  {selected === question.correctAnswer
+                    ? "Верно!"
+                    : "Не совсем."}
                 </strong>
                 <p>{question.details}</p>
               </div>
